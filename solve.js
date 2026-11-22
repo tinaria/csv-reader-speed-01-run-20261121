@@ -13,6 +13,10 @@
 // after it is read again as unquoted. Fields stay strings, never trimmed or
 // converted.
 
+// The next comma, LF or CR at or after pos, in one scan (shared: run() is never
+// re-entered, and readUnquoted always sets lastIndex before each exec).
+const DELIM = /[,\n\r]/g;
+
 const COMMA = 44;
 const LF = 10;
 const CR = 13;
@@ -42,9 +46,6 @@ export function run(input) {
   let fValue = '';
   let fEnded = 0;
   let fAdded = 0;
-
-  // The next comma, LF or CR at or after pos, in one scan.
-  const DELIM = /[,\n\r]/g;
 
   // The quoted content in [from, to): each CRLF and each lone CR becomes one LF and
   // counts one line. Returns the normalized string; updates `line`.
